@@ -2,7 +2,13 @@
   "name": "pi-model-authguard",
   "version": "1.0.0",
   "description": "pi extension: prevent model resolution from landing on a provider with no API key",
-  "keywords": ["pi-package", "pi-extension", "model", "auth", "apikey"],
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "model",
+    "auth",
+    "apikey"
+  ],
   "license": "MIT",
   "author": "David Raistrick",
   "homepage": "https://github.com/keen99/pi-model-authguard",
@@ -18,9 +24,16 @@
     "check": "echo 'nothing to check'"
   },
   "pi": {
-    "extensions": ["./index.ts"]
+    "extensions": [
+      "./index.ts"
+    ]
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"
+  },
+  "peerDependenciesMeta": {
+    "@earendil-works/pi-coding-agent": {
+      "optional": true
+    }
   }
 }
