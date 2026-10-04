@@ -70,6 +70,18 @@ type SetDefault = (provider: string, modelId: string) => void;
 
 export default function (pi: ExtensionAPI) {
   pi.on("session_start", async (_event, ctx) => {
+    if (process.env.AUTHGUARD_DEBUG === "1") {
+      try {
+        const fs = await import("fs");
+        const path = await import("path");
+        const os = await import("os");
+        const agentDir = process.env.PI_CODING_AGENT_DIR || path.join(os.homedir(), ".pi", "agent");
+        const model = ctx.model ? `${ctx.model.provider}/${ctx.model.id}` : null;
+        const authed = ctx.model ? ctx.modelRegistry.hasConfiguredAuth(ctx.model) : null;
+        fs.writeFileSync(path.join(agentDir, "authguard-loaded.json"), JSON.stringify({ loaded: true, model, authed }) + "\n");
+      } catch { /* debug marker best-effort */ }
+    }
+
     const current = ctx.model;
 
     // Authed (or no model to check) -> nothing to do.

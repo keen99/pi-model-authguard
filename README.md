@@ -1,5 +1,8 @@
 # pi-model-authguard
 
+![release-watch](https://github.com/keen99/pi-model-authguard/actions/workflows/release-watch.yml/badge.svg)
+[![pi tested](https://img.shields.io/github/v/release/keen99/pi-model-authguard?label=pi%20tested%200.75.0%20%E2%86%92)](https://github.com/keen99/pi-model-authguard/releases)
+
 Pi extension that prevents CLI/startup model resolution from landing on a provider with no API key.
 
 **The reason this exists:** pi's interactive TUI (`/model`, Ctrl+P) already filters models by auth --- but the CLI (`--model`) and saved-default paths do **not**. They resolve against the full model list and can pick an unauthed provider, then fail at request time.
@@ -64,6 +67,26 @@ Then `pi install` or restart pi.
 - **No substitution.** If no authed provider serves the requested model id, authguard does not swap to a different model. It only corrects same-id cross-provider misroutes. Use `models.json` to enforce a provider for a model, or `pi /login` to add auth.
 - **No persistence side effect.** `pi.setModel()` normally writes the chosen model to `settings.json` as the new global default (https://github.com/earendil-works/pi/issues/5976). This extension monkeypatches that write to a no-op during the redirect, so the on-disk default is left untouched. The active session model still switches.
 - **CLI/startup only.** Interactive `/model` is already safe (TUI filters by auth), so not touched. This extension guards the `--model` and saved-default paths only.
+
+## Development
+
+```sh
+npm run check       # typecheck + unit tests (prototype spies, fake model registry)
+npm run test:matrix # deep smoke on every published pi release >= 0.75.0
+```
+
+Unit tests drive the real session_start handler with a fake pi +
+model registry and REAL SettingsManager prototype: no-model/authed
+no-ops, unauthed + no same-id → error without substitution (exact-id
+match, no prefix matches), unauthed + same id → setModel redirect with
+setDefaultModelAndProvider swallowed during the switch and the
+prototype restored afterwards, reject/throw paths restore too. The
+matrix boots each pinned pi release in RPC mode with the extension
+loaded and asserts the auth-check path ran on the real process via the
+AUTHGUARD_DEBUG marker (model + authed flag recorded).
+
+`AUTHGUARD_DEBUG=1` writes the marker; `PI_TEST_BIN` overrides the pi
+binary in the smoke. Tests are hermetic — no real settings or network.
 
 ## License
 

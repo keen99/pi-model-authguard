@@ -1,32 +1,36 @@
 {
   "name": "pi-model-authguard",
-  "version": "1.0.0",
-  "description": "pi extension: prevent model resolution from landing on a provider with no API key",
-  "keywords": [
-    "pi-package",
-    "pi-extension",
-    "model",
-    "auth",
-    "apikey"
-  ],
-  "license": "MIT",
-  "author": "David Raistrick",
-  "homepage": "https://github.com/keen99/pi-model-authguard",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/keen99/pi-model-authguard.git"
-  },
+  "version": "0.1.0",
+  "description": "pi extension: redirect unauthed models to the same model id on an authed provider at session start",
   "type": "module",
   "main": "./index.ts",
   "scripts": {
-    "clean": "echo 'nothing to clean'",
-    "build": "echo 'nothing to build'",
-    "check": "echo 'nothing to check'"
+    "typecheck": "tsc --noEmit",
+    "test": "npx --yes tsx@4.20.6 --test test/*.test.ts",
+    "check": "npm run typecheck && npm test",
+    "test:matrix": "node test/release-matrix.mjs"
   },
   "pi": {
     "extensions": [
       "./index.ts"
     ]
+  },
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "auth",
+    "models"
+  ],
+  "license": "MIT",
+  "author": "David Raistrick",
+  "homepage": "https://github.com/keen99/pi-git-guard",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/keen99/pi-git-guard.git"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "0.75.4",
+    "typescript": "5.9.3"
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"
